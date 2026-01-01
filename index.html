@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cuenta Regresiva - Año Nuevo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="fx"></canvas>
+
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="dot"></div>
+        <div>
+          <div class="title">Cuenta regresiva</div>
+          <div class="subtitle" id="targetLabel">Año Nuevo</div>
+        </div>
+      </div>
+
+      <button id="soundBtn" class="btn" aria-label="Activar sonido">
+        🔊 Activar sonido
+      </button>
+    </header>
+
+    <section class="hero">
+      <h1 id="headline">Falta poco…</h1>
+
+      <div class="timer" role="timer" aria-live="polite">
+        <div class="box">
+          <div class="num" id="days">00</div>
+          <div class="lab">Días</div>
+        </div>
+        <div class="sep">:</div>
+        <div class="box">
+          <div class="num" id="hours">00</div>
+          <div class="lab">Horas</div>
+        </div>
+        <div class="sep">:</div>
+        <div class="box">
+          <div class="num" id="mins">00</div>
+          <div class="lab">Min</div>
+        </div>
+        <div class="sep">:</div>
+        <div class="box">
+          <div class="num" id="secs">00</div>
+          <div class="lab">Seg</div>
+        </div>
+      </div>
+
+      <p class="hint" id="hint">
+        Tip: Déjalo abierto y cuando llegue a cero… pasa lo “increíble”.
+      </p>
+
+      <div class="actions">
+        <button class="btn ghost" id="setTargetBtn">📅 Cambiar fecha</button>
+        <!-- <button class="btn primary" id="testBtn">✨ Probar final</button> -->
+      </div>
+    </section>
+
+    <!-- <section class="panel">
+      <h2>Personalización rápida</h2>
+      <ul>
+        <li><b>Mensaje final:</b> edita <code>FINAL_MESSAGE</code></li>
+        <li><b>Fecha objetivo:</b> edita <code>getNextNewYear()</code> o usa “Cambiar fecha”.</li>
+      </ul>
+    </section> -->
+  </main>
+
+  <!-- Modal para cambiar fecha -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Elegir fecha objetivo</h3>
+      <p class="mini">Ejemplo: 2026-01-01 00:00:00</p>
+
+      <div class="grid">
+        <label>Fecha y hora
+          <input id="dtInput" type="datetime-local" />
+        </label>
+        <label>Texto debajo
+          <input id="labelInput" type="text" placeholder="Año Nuevo 2026" />
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn ghost" id="closeModal">Cancelar</button>
+        <button class="btn primary" id="saveTarget">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
