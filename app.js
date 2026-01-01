@@ -186,6 +186,42 @@ function startCelebration() {
     loop();
 }
 
-if (FORCE_CELEBRATION) {
-    startCelebration();
+if (isNewYearCelebrationTime()) {
+  // 🎆 FELIZ AÑO NUEVO hasta las 5 AM
+  startCelebration();
+} else {
+  // ⏳ Empieza la cuenta para el próximo año
+  startCountdown();
+}
+
+
+function isNewYearCelebrationTime() {
+  const now = new Date();
+
+  // ¿Estamos en 1 de enero?
+  const isJanuaryFirst =
+    now.getMonth() === 0 && now.getDate() === 1;
+
+  // Hora límite: 5 AM
+  const isBeforeFiveAM = now.getHours() < 12;
+
+  return isJanuaryFirst && isBeforeFiveAM;
+}
+function startCountdown() {
+  // Mostrar UI del contador
+  document.querySelector(".topbar")?.classList.remove("hidden");
+  document.querySelector(".timer")?.classList.remove("hidden");
+  document.querySelector(".actions")?.classList.remove("hidden");
+
+  // Mensaje normal
+  document.getElementById("headline").textContent = "Falta poco…";
+  document.getElementById("hint").textContent =
+    "Cuenta regresiva para el próximo Año Nuevo 🎉";
+
+  // Fecha objetivo: próximo año
+  targetDate = getNextNewYear();
+
+  // Iniciar contador
+  setInterval(tick, 250);
+  tick();
 }
