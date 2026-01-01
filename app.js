@@ -76,7 +76,9 @@ function spawnRocket() {
 }
 
 function explode(x, y, hue) {
-    for (let i = 0; i < 120; i++) {
+    const particleCount = W < 600 ? 60 : 120;
+    for (let i = 0; i < particleCount; i++) {
+
         const a = rand(0, Math.PI * 2);
         particles.push({
             x, y,
@@ -91,29 +93,46 @@ function explode(x, y, hue) {
 }
 
 function drawMessage() {
-    const t = performance.now() - startTime;
-    ctx.globalAlpha = Math.min(1, t / 1000);
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    const elapsed = performance.now() - startTime;
+    ctx.save();
+
+    // Fade-in suave
+    ctx.globalAlpha = Math.min(1, elapsed / 900);
+
+    // ===== SAFE AREA =====
+    const safeMargin = W * 0.08; // 8% margen lateral
+    const maxTextWidth = W - safeMargin * 2;
+
+    // Tamaño de fuente RESPONSIVE REAL
     const fontSize = Math.min(
-        W * 0.09,
-        H * 0.12,
-        96
+        maxTextWidth * 0.12, // depende del ancho
+        H * 0.12,            // depende de la altura
+        88                   // límite máximo
     );
 
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.font = `900 ${fontSize}px system-ui, -apple-system, BlinkMacSystemFont`;
-
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "#ffffff";
 
     const lines = FINAL_MESSAGE.split("\n");
-    const lineHeight = fontSize * 1.2;
-    const startY = H / 2 - ((lines.length - 1) * lineHeight) / 2;
+    const lineHeight = fontSize * 1.25;
 
-    lines.forEach((l, i) => {
-        ctx.fillText(l, W / 2, startY + i * lineHeight);
+    // Subimos un poco el bloque en móvil
+    const blockHeight = (lines.length - 1) * lineHeight;
+    const startY = H * 0.42 - blockHeight / 2;
+
+    // Sombra suave para contraste
+    ctx.shadowColor = "rgba(0,0,0,0.35)";
+    ctx.shadowBlur = fontSize * 0.15;
+
+    lines.forEach((line, i) => {
+        ctx.fillText(line, W / 2, startY + i * lineHeight, maxTextWidth);
     });
 
+    ctx.restore();
 }
+
 
 function loop() {
     ctx.clearRect(0, 0, W, H);
@@ -133,7 +152,9 @@ function loop() {
         p.t++;
         ctx.fillStyle = `hsla(${p.hue},100%,60%,0.9)`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        const size = W < 600 ? 1.8 : 2.6;
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+
         ctx.fill();
         if (p.t > p.life) particles.splice(i, 1);
     });
