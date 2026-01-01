@@ -95,12 +95,24 @@ function drawMessage() {
     ctx.globalAlpha = Math.min(1, t / 1000);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `900 ${Math.min(90, W * 0.08)}px system-ui`;
+    const fontSize = Math.min(
+        W * 0.09,
+        H * 0.12,
+        96
+    );
+
+    ctx.font = `900 ${fontSize}px system-ui, -apple-system, BlinkMacSystemFont`;
+
     ctx.fillStyle = "#fff";
 
-    FINAL_MESSAGE.split("\n").forEach((l, i) => {
-        ctx.fillText(l, W / 2, H / 2 + i * 90);
+    const lines = FINAL_MESSAGE.split("\n");
+    const lineHeight = fontSize * 1.2;
+    const startY = H / 2 - ((lines.length - 1) * lineHeight) / 2;
+
+    lines.forEach((l, i) => {
+        ctx.fillText(l, W / 2, startY + i * lineHeight);
     });
+
 }
 
 function loop() {

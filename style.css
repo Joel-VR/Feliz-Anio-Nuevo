@@ -226,3 +226,32 @@ body.shake{
   60%{ transform: translate(-4px, -4px); }
   80%{ transform: translate(4px, 4px); }
 }
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#fx {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+@media (max-width: 768px) {
+  .hero {
+    padding: 12px;
+  }
+
+  .hint {
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .app {
+    padding: 0;
+  }
+}
