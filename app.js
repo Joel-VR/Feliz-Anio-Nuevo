@@ -203,7 +203,7 @@ function isNewYearCelebrationTime() {
     now.getMonth() === 0 && now.getDate() === 1;
 
   // Hora límite: 5 AM
-  const isBeforeFiveAM = now.getHours() < 12;
+  const isBeforeFiveAM = now.getHours() < 23;
 
   return isJanuaryFirst && isBeforeFiveAM;
 }
