@@ -1,14 +1,45 @@
 // =================================
 // CONFIG
 // =================================
-const FORCE_CELEBRATION = true; // ⬅️ SOLO FELIZ AÑO NUEVO
+const FORCE_CELEBRATION = false; // ⬅️ Cambiado a false para que la lógica de fecha funcione por defecto
 const FINAL_MESSAGE = "¡FELIZ AÑO NUEVO! ✨\nQue este año te suba de nivel 🔥";
+
+let targetDate = null;
+let targetLabel = "Año Nuevo";
 
 // =================================
 // UI
 // =================================
 const $ = (id) => document.getElementById(id);
 const hintEl = $("hint");
+
+// =================================
+// MODAL LOGIC
+// =================================
+$("setTargetBtn")?.addEventListener("click", () => {
+    $("modal").classList.add("show");
+    $("dtInput").value = targetDate.toISOString().slice(0, 16);
+    $("labelInput").value = targetLabel;
+});
+
+$("closeModal")?.addEventListener("click", () => {
+    $("modal").classList.remove("show");
+});
+
+$("saveTarget")?.addEventListener("click", () => {
+    const newDate = new Date($("dtInput").value);
+    const newLabel = $("labelInput").value || "Año Nuevo";
+    
+    if (!isNaN(newDate.getTime())) {
+        targetDate = newDate;
+        targetLabel = newLabel;
+        $("targetLabel").textContent = targetLabel;
+        $("modal").classList.remove("show");
+        tick();
+    } else {
+        alert("Fecha no válida");
+    }
+});
 
 // =================================
 // CANVAS
@@ -186,7 +217,7 @@ function startCelebration() {
     loop();
 }
 
-if (isNewYearCelebrationTime()) {
+if (FORCE_CELEBRATION || isNewYearCelebrationTime()) {
   // 🎆 FELIZ AÑO NUEVO hasta las 5 AM
   startCelebration();
 } else {
@@ -202,11 +233,36 @@ function isNewYearCelebrationTime() {
   const isJanuaryFirst =
     now.getMonth() === 0 && now.getDate() === 1;
 
-  // Hora límite: 5 AM
-  const isBeforeFiveAM = now.getHours() < 23;
-
-  return isJanuaryFirst && isBeforeFiveAM;
+  // Dura todo el día (hasta las 23:59:59)
+  return isJanuaryFirst;
 }
+
+function getNextNewYear() {
+  const now = new Date();
+  const nextYear = now.getFullYear() + (now.getMonth() === 0 && now.getDate() === 1 ? 0 : 1);
+  return new Date(nextYear, 0, 1, 0, 0, 0);
+}
+
+function tick() {
+  const now = new Date();
+  const diff = targetDate - now;
+
+  if (diff <= 0) {
+    startCelebration();
+    return;
+  }
+
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+  $("days").textContent = d.toString().padStart(2, "0");
+  $("hours").textContent = h.toString().padStart(2, "0");
+  $("mins").textContent = m.toString().padStart(2, "0");
+  $("secs").textContent = s.toString().padStart(2, "0");
+}
+
 function startCountdown() {
   // Mostrar UI del contador
   document.querySelector(".topbar")?.classList.remove("hidden");
@@ -220,6 +276,8 @@ function startCountdown() {
 
   // Fecha objetivo: próximo año
   targetDate = getNextNewYear();
+  targetLabel = "Año Nuevo " + targetDate.getFullYear();
+  $("targetLabel").textContent = targetLabel;
 
   // Iniciar contador
   setInterval(tick, 250);
